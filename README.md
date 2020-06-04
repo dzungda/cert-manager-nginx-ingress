@@ -42,25 +42,54 @@ $kubectl get svc -n ingress-nginx
 NAME            TYPE           CLUSTER-IP      EXTERNAL-IP                                                                          PORT(S)                      AGE
 ingress-nginx   LoadBalancer   10.100.42.179   a9ca4c35476394e80b5b74948eb28c82-853bc8bd128406bc.elb.ap-southeast-1.amazonaws.com   80:32141/TCP,443:30935/TCP   14m
 ```
-
+#
 
 ## Setting Up the Example Backend
 We will define a hello-world backend service and deployment
 ```hcl
 kubectl apply -f hello-deployment.yaml
 ```
+#
 ## Assign a DNS name 
 The external IP that is allocated to the ingress-controller is the ELB endpoint to which all incoming traffic should be routed. To enable this, add it to a DNS zone you control
 In this example I have DNS named : `elb.giaingay.io`
-
+#
 ## Deploy Cert-Manager
 We need to install cert-manager to do the work with Kubernetes to request a certificate and respond to the challenge to validate it.
 All resources (the CustomResourceDefinitions, cert-manager, namespace, and the webhook component) are included in a single YAML manifest file
 ```hcl
 kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v0.15.1/cert-manager.yaml
 ```
-
+#
 ## Configure Let’s Encrypt Issuer
+An Issuer is the definition for where cert-manager will get request TLS certificates. An `Issuer` is specific to a single namespace in Kubernetes and `ClusterIssuer` resources apply across all Ingress resources in your cluster and don’t have this namespace-matching requirement
 
+```hcl
+apiVersion: cert-manager.io/v1alpha2
+kind: Issuer
+metadata:
+  name: letsencrypt-prod
+spec:
+  acme:
+       # The ACME server URL
+    server: https://acme-v02.api.letsencrypt.org/directory
+       # Email address used for ACME registration
+    email: dungdaptit@gmail.com
+       # Name of a secret used to store the ACME account private key
+    privateKeySecretRef:
+      name: letsencrypt-prod
+       # Enable the HTTP-01 challenge provider
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
+```
 
-Deploy a TLS Ingress Resource 
+Once edited, apply the custom resource:
+```hcl
+kubectl apply -f issuer.yaml
+```
+
+#
+## Deploy a TLS Ingress Resource 
+
