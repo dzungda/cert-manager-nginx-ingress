@@ -92,4 +92,42 @@ kubectl apply -f issuer.yaml
 
 #
 ## Deploy a TLS Ingress Resource 
+Add `cert-manager.io/issuer` on annotations 
 
+```hcl
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: hello-world-ing
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    cert-manager.io/issuer: "letsencrypt-prod"
+spec:
+  tls:
+  - hosts:
+    - elb.giaingay.io
+    secretName: tls-secret
+  rules:
+  - host: elb.giaingay.io
+    http:
+      paths:
+      - backend:
+          serviceName: docker-hello-world-svc
+          servicePort: 8088
+```
+and apply 
+```hcl
+kubectl apply -f ingress.yaml
+```
+Cert-manager will read these annotations and use them to create a certificate, which you can request and see:
+```hcl
+$ kubectl get certificate
+NAME         READY   SECRET       AGE
+tls-secret   True    tls-secret   125m
+```
+
+## Testing
+```hcl
+$ curl -k https://elb.giaingay.io
+<h1>Hello webhook world from: docker-hello-world-65fb557b9f-7ks9w</h1>
+```
