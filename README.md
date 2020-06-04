@@ -92,7 +92,7 @@ kubectl apply -f issuer.yaml
 
 #
 ## Deploy a TLS Ingress Resource 
-Add `cert-manager.io/issuer` on annotations 
+Add `cert-manager.io/issuer` on annotations and config as below
 
 ```hcl
 apiVersion: extensions/v1beta1
