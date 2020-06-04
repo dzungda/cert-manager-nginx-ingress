@@ -1,8 +1,7 @@
 # cert-manager-nginx-ingress
 #### Securing nginx-ingress using cert-manager 
 Example on EKS enviroment
-git clone https://github.com/dzungda/cert-manager-nginx-ingress.git
-
+#
 ## Deploy nginx ingress controller
 Run the following command to create the nginx-ingress-controller ingress controller deployment, along with the Kubernetes RBAC roles and bindings:
 ```hcl
