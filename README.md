@@ -52,7 +52,7 @@ kubectl apply -f hello-deployment.yaml
 #
 ## Assign a DNS name 
 The external IP that is allocated to the ingress-controller is the ELB endpoint to which all incoming traffic should be routed. To enable this, add it to a DNS zone you control
-In this example I have DNS named : `elb.giaingay.io`
+In this example I have DNS named : `dungda.xyz`
 #
 ## Deploy Cert-Manager
 We need to install cert-manager to do the work with Kubernetes to request a certificate and respond to the challenge to validate it.
@@ -108,7 +108,7 @@ spec:
     - elb.giaingay.io
     secretName: tls-secret
   rules:
-  - host: elb.giaingay.io
+  - host: dungda.xyz
     http:
       paths:
       - backend:
@@ -128,6 +128,6 @@ tls-secret   True    tls-secret   125m
 
 ## Testing
 ```hcl
-$ curl -k https://elb.giaingay.io
+$ curl -k https://dungda.xyz
 <h1>Hello webhook world from: docker-hello-world-65fb557b9f-7ks9w</h1>
 ```
