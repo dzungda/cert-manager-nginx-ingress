@@ -105,7 +105,7 @@ metadata:
 spec:
   tls:
   - hosts:
-    - elb.giaingay.io
+    - dungda.xyz
     secretName: tls-secret
   rules:
   - host: dungda.xyz
